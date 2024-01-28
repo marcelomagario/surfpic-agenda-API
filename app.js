@@ -4,10 +4,20 @@ const Sequelize = require('sequelize');
 const app = express();
 app.use(express.json());
 
-const sequelize = new Sequelize('surfpics_agenda', 'marcelomagario', 'surflife2024', {
+const sequelize = new Sequelize('postgres', 'postgres', 'pass', {
   host: 'localhost',
+  port: 5433,
   dialect: 'postgres'
 });
+
+// Testando a conexão
+sequelize.authenticate()
+  .then(() => {
+    console.log('Conexão estabelecida com sucesso.');
+  })
+  .catch(err => {
+    console.error('Não foi possível conectar ao banco de dados:', err);
+  });
 
 // Definindo os modelos
 const Fotografo = sequelize.define('fotografo', {
@@ -19,11 +29,13 @@ const Fotografo = sequelize.define('fotografo', {
   praiaId: Sequelize.INTEGER
 });
 
+
 const Praia = sequelize.define('praia', {
   nome: Sequelize.STRING
 });
 
 Fotografo.belongsTo(Praia, {as: 'praia'});
+
 
 // Rotas
 app.post('/fotografos', async (req, res) => {
