@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Lista de Fotógrafos</title>
+</head>
+<body>
+  <h1>Lista de Fotógrafos</h1>
+  <ul>
+    <% fotografos.forEach(fotografo => { %>
+      <li><%= fotografo.nome %></li>
+    <% }); %>
+  </ul>
+</body>
+</html>
