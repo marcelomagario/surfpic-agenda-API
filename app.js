@@ -3,7 +3,9 @@ const express = require('express');
 const path = require('path');
 const Sequelize = require('sequelize');
 const app = express();
+
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -25,22 +27,31 @@ sequelize.authenticate()
   });
 
 // Definindo os modelos
-const Fotografo = sequelize.define('fotografo', {
+const fotografos = sequelize.define('fotografos', {
   nome: Sequelize.STRING,
   senha: Sequelize.STRING,
-  dia: Sequelize.DATEONLY,
-  horaInicio: Sequelize.TIME,
-  horaFinal: Sequelize.TIME,
-  praiaId: Sequelize.INTEGER
+  picture: Sequelize.STRING,
+  instagram: Sequelize.STRING,
+  whatsapp: Sequelize.STRING,
+  email: Sequelize.STRING,
+  link: Sequelize.STRING
 });
 
+// sequelize.sync({ force: true }).catch(console.error);
 
-const Praia = sequelize.define('praia', {
-  nome: Sequelize.STRING
-});
+// const Sessao = sequelize.define('sessao', {
+//   fotografo: Sequelize.STRING,
+//   dia: Sequelize.DATEONLY,
+//   horaInicio: Sequelize.TIME,
+//   horaFinal: Sequelize.TIME,
+//   praiaId: Sequelize.INTEGER
+// });
 
-Fotografo.belongsTo(Praia, {as: 'praia'});
+// const Praia = sequelize.define('praia', {
+//   nome: Sequelize.STRING
+// });
 
+// Fotografo.belongsTo(Praia, {as: 'praia'});
 
 // Rotas
 
@@ -49,24 +60,22 @@ app.get('/fotografos/cadastro', (req, res) => {
 });
 
 app.post('/fotografos', async (req, res) => {
-  const fotografo = await Fotografo.create(req.body);
+  const novoFotografo = await fotografos.create(req.body);
   console.log('Rota fotografos - POST');
   res.redirect('/fotografos');
 });
 
 app.get('/fotografos', async (req, res) => {
-  // const fotografos = await Fotografo.findAll({include: 'praia'});
-  const fotografos = await Fotografo.findAll();
-  res.render('lista', { fotografos });
+  const listaFotografos = await fotografos.findAll();
+  res.render('lista', { fotografos: listaFotografos });
   console.log('Rota fotografos - GET');
-  res.json(fotografos);
+  res.json(listaFotografos);
 });
 
-
-app.post('/praias', async (req, res) => {
-  const praia = await Praia.create(req.body);
-  res.json(praia);
-});
+// app.post('/praias', async (req, res) => {
+//   const praia = await Praia.create(req.body);
+//   res.json(praia);
+// });
 
 // Iniciando o servidor
 app.listen(3000, async () => {
