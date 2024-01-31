@@ -7,7 +7,9 @@
   <h1>Lista de Fotógrafos</h1>
   <ul>
     <% fotografos.forEach(fotografo => { %>
-      <li><%= fotografo.nome %></li>
+      <li><%= fotografo.nome %> - <%= fotografo.picture %> - <%= fotografo.instagram %> - 
+        <%= fotografo.whatsapp %> - <%= fotografo.email %> - <%= fotografo.link %>
+
     <% }); %>
   </ul>
 </body>
