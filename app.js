@@ -27,7 +27,7 @@ sequelize.authenticate()
   });
 
 // Definindo os modelos
-const fotografos = sequelize.define('fotografos', {
+const tbfotografo = sequelize.define('fotografo', {
   nome: Sequelize.STRING,
   senha: Sequelize.STRING,
   picture: Sequelize.STRING,
@@ -35,17 +35,19 @@ const fotografos = sequelize.define('fotografos', {
   whatsapp: Sequelize.STRING,
   email: Sequelize.STRING,
   link: Sequelize.STRING
+}, {
+  freezeTableName: true
 });
 
-app.get('/fotografos/cadastro', (req, res) => {
+app.get('/fotografo/cadastro', (req, res) => {
   res.render('cadastro');
 });
 
 
-app.post('/fotografos/cadastro', async (req, res) => {
+app.post('/fotografo/cadastro', async (req, res) => {
   const { nome, senha, picture, instagram, whatsapp, email, link } = req.body;
   try {
-    const novoFotografo = await fotografos.create({ nome, senha, picture, instagram, whatsapp, email, link });
+    const novoFotografo = await tbfotografo.create({ nome, senha, picture, instagram, whatsapp, email, link });
     res.json(novoFotografo);
   } catch (err) {
     console.error(err);
@@ -53,14 +55,18 @@ app.post('/fotografos/cadastro', async (req, res) => {
   }
 });
 
-app.put('/fotografos/cadastro/:id', async (req, res) => {
+app.put('/fotografo/cadastro/:id', async (req, res) => {
   const { id } = req.params;
   const { nome, senha, picture, instagram, whatsapp, email, link } = req.body;
-  console.log('Rota fotografos - PUT');
+  console.log('Rota fotografo - PUT');
   try {
-    const fotografo = await fotografos.findByPk(id);
+    const fotografo = await tbfotografo.findByPk(id);
     if (fotografo) {
-      await fotografo.update({ nome, senha, picture, instagram, whatsapp, email, link });
+      await tbfotografo.update({ nome, senha, picture, instagram, whatsapp, email, link }, {
+        where: {
+          id: id
+        }
+      });
       res.json(fotografo);
     } else {
       res.status(404).json({ error: 'Fotógrafo não encontrado' });
@@ -71,11 +77,11 @@ app.put('/fotografos/cadastro/:id', async (req, res) => {
   }
 });
 
-app.delete('/fotografos/cadastro/:id', async (req, res) => {
+app.delete('/fotografo/cadastro/:id', async (req, res) => {
   const { id } = req.params;
-  console.log('Rota fotografos - DELETE');
+  console.log('Rota fotografo - DELETE');
   try {
-    const fotografo = await fotografos.findByPk(id);
+    const fotografo = await tbfotografo.findByPk(id);
     if (fotografo) {
       await fotografo.destroy();
       res.json(fotografo);
@@ -88,14 +94,31 @@ app.delete('/fotografos/cadastro/:id', async (req, res) => {
   }
 });
 
+// Rota para listar todos os fotografos
+app.get('/fotografo', async (req, res) => {
+  try {
+    const listaFotografos = await tbfotografo.findAll();
+    res.json(listaFotografos);
+    // res.render('lista', { fotografo: listaFotografos });
+  } catch (err) {
+    console.error('Erro ao buscar fotografos:', err);
+    res.status(500).json({ error: 'Não foi possível buscar os fotografos' });
+  }
+}
+);
 
-app.get('/fotografos', async (req, res) => {
-  const listaFotografos = await fotografos.findAll();
-  // res.render('lista', { fotografos: listaFotografos });
-  console.log('Rota fotografos - GET');
-  res.json(listaFotografos);
-});
-
+// app.get('/fotografo', async (req, res) => {
+//   try {
+//     const listaFotografos = await tbfotografo.findAll();
+    
+//     // res.render('lista', { fotografos: listaFotografos });
+//     console.log('Rota fotografos - GET');
+//     res.json(listaFotografos);
+//   } catch (err) {
+//     console.error('Erro ao buscar fotografos:', err);
+//     res.status(500).json({ error: 'Não foi possível buscar os fotografos' });
+//   }
+// });
 
 // Iniciando o servidor
 app.listen(3000, async () => {
