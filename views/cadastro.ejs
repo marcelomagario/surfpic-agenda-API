@@ -5,21 +5,35 @@
 </head>
 <body>
   <h1>Cadastro de Fotógrafo</h1>
-  <form method='post' action='/fotografos'>
-    <label>Nome</label>
-    <input type='text' name='nome' required>
-    <label>Senha</label>
-    <input type='password' name='senha' required>
-    <label>Profile Photo</label>
-    <input type='text' name='picture'>
-    <label>Instagram</label>
-    <input type='text' name='instagram'>
-    <label>Whatsapp</label>
-    <input type='text' name='whatsapp'>
-    <label>Email</label>
-    <input type='email' name='email'>
-    <label>Link</label>
-    <input type='text' name='link'>
+  <form method='post' action='/fotografos/cadastro'>
+    <div>
+      <label>Nome</label>
+      <input type='text' name='nome' required>
+    </div>
+    <div>
+      <label>Senha</label>
+      <input type='password' name='senha' required>
+    </div>
+    <div>
+      <label>Profile Photo</label>
+      <input type='text' name='picture'>
+    </div>
+    <div>
+      <label>Instagram</label>
+      <input type='text' name='instagram'>
+    </div>
+    <div>
+      <label>Whatsapp</label>
+      <input type='text' name='whatsapp'>
+    </div>
+    <div>
+      <label>Email</label>
+      <input type='email' name='email'>
+    </div>
+    <div>
+      <label>Link</label>
+      <input type='text' name='link'>
+    </div>
     <button type='submit'>Cadastrar</button>
   </form>
 </body>

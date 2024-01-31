@@ -37,45 +37,65 @@ const fotografos = sequelize.define('fotografos', {
   link: Sequelize.STRING
 });
 
-// sequelize.sync({ force: true }).catch(console.error);
-
-// const Sessao = sequelize.define('sessao', {
-//   fotografo: Sequelize.STRING,
-//   dia: Sequelize.DATEONLY,
-//   horaInicio: Sequelize.TIME,
-//   horaFinal: Sequelize.TIME,
-//   praiaId: Sequelize.INTEGER
-// });
-
-// const Praia = sequelize.define('praia', {
-//   nome: Sequelize.STRING
-// });
-
-// Fotografo.belongsTo(Praia, {as: 'praia'});
-
-// Rotas
-
 app.get('/fotografos/cadastro', (req, res) => {
   res.render('cadastro');
 });
 
-app.post('/fotografos', async (req, res) => {
-  const novoFotografo = await fotografos.create(req.body);
-  console.log('Rota fotografos - POST');
-  res.redirect('/fotografos');
+
+app.post('/fotografos/cadastro', async (req, res) => {
+  const { nome, senha, picture, instagram, whatsapp, email, link } = req.body;
+  try {
+    const novoFotografo = await fotografos.create({ nome, senha, picture, instagram, whatsapp, email, link });
+    res.json(novoFotografo);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Não foi possível salvar o fotógrafo' });
+  }
 });
+
+app.put('/fotografos/cadastro/:id', async (req, res) => {
+  const { id } = req.params;
+  const { nome, senha, picture, instagram, whatsapp, email, link } = req.body;
+  console.log('Rota fotografos - PUT');
+  try {
+    const fotografo = await fotografos.findByPk(id);
+    if (fotografo) {
+      await fotografo.update({ nome, senha, picture, instagram, whatsapp, email, link });
+      res.json(fotografo);
+    } else {
+      res.status(404).json({ error: 'Fotógrafo não encontrado' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Não foi possível atualizar o fotógrafo' });
+  }
+});
+
+app.delete('/fotografos/cadastro/:id', async (req, res) => {
+  const { id } = req.params;
+  console.log('Rota fotografos - DELETE');
+  try {
+    const fotografo = await fotografos.findByPk(id);
+    if (fotografo) {
+      await fotografo.destroy();
+      res.json(fotografo);
+    } else {
+      res.status(404).json({ error: 'Fotógrafo não encontrado' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Não foi possível deletar o fotógrafo' });
+  }
+});
+
 
 app.get('/fotografos', async (req, res) => {
   const listaFotografos = await fotografos.findAll();
-  res.render('lista', { fotografos: listaFotografos });
+  // res.render('lista', { fotografos: listaFotografos });
   console.log('Rota fotografos - GET');
   res.json(listaFotografos);
 });
 
-// app.post('/praias', async (req, res) => {
-//   const praia = await Praia.create(req.body);
-//   res.json(praia);
-// });
 
 // Iniciando o servidor
 app.listen(3000, async () => {
