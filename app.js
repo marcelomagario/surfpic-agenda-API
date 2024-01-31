@@ -39,6 +39,36 @@ const tbfotografo = sequelize.define('fotografo', {
   freezeTableName: true
 });
 
+// Definindo o modelo Praia
+const Praia = sequelize.define('praia', {
+  nome_praia: Sequelize.STRING,
+  localizacao: Sequelize.GEOMETRY('POINT'),
+  direcao_ideal_swell: Sequelize.STRING,
+  direcao_ideal_vento: Sequelize.STRING
+}, {
+  freezeTableName: true
+});
+
+// Definindo o modelo SessaoFotografo
+const SessaoFotografo = sequelize.define('sessao_fotografo', {
+  data: Sequelize.DATE,
+  hora_inicial: Sequelize.TIME,
+  hora_final: Sequelize.TIME
+}, {
+  freezeTableName: true
+});
+
+// Definindo as relações
+tbfotografo.hasMany(SessaoFotografo, { foreignKey: 'fotografoId' });
+SessaoFotografo.belongsTo(tbfotografo, { foreignKey: 'fotografoId' });
+
+Praia.hasMany(SessaoFotografo, { foreignKey: 'praiaId' });
+SessaoFotografo.belongsTo(Praia, { foreignKey: 'praiaId' });
+
+// Sincronizando os modelos com o banco de dados
+sequelize.sync();
+
+
 app.get('/fotografo/cadastro', (req, res) => {
   res.render('cadastro');
 });
@@ -107,18 +137,6 @@ app.get('/fotografo', async (req, res) => {
 }
 );
 
-// app.get('/fotografo', async (req, res) => {
-//   try {
-//     const listaFotografos = await tbfotografo.findAll();
-    
-//     // res.render('lista', { fotografos: listaFotografos });
-//     console.log('Rota fotografos - GET');
-//     res.json(listaFotografos);
-//   } catch (err) {
-//     console.error('Erro ao buscar fotografos:', err);
-//     res.status(500).json({ error: 'Não foi possível buscar os fotografos' });
-//   }
-// });
 
 // Iniciando o servidor
 app.listen(3000, async () => {
