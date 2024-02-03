@@ -83,9 +83,9 @@ app.get('/fotografo', async (req, res) => {
 // Praia
 
 app.post('/praia/cadastro', async (req, res) => {
-  const { nome_praia, latitude, longitute, direcao_ideal_swell, direcao_ideal_vento } = req.body;
+  const { nome_praia, latitude, longitude, direcao_ideal_swell, direcao_ideal_vento } = req.body;
   try {
-    const result = await pool.query('INSERT INTO praia(nome_praia, latitude, longitute, direcao_ideal_swell, direcao_ideal_vento) VALUES($1, $2, $3, $4, $5) RETURNING *', [nome_praia, latitude, longitute, direcao_ideal_swell, direcao_ideal_vento]);
+    const result = await pool.query('INSERT INTO praia(nome_praia, latitude, longitude, direcao_ideal_swell, direcao_ideal_vento) VALUES($1, $2, $3, $4, $5) RETURNING *', [nome_praia, latitude, longitude, direcao_ideal_swell, direcao_ideal_vento]);
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
@@ -136,6 +136,62 @@ app.get('/praia', async (req, res) => {
   }
 });
 
+
+// Sessão - TO DO
+
+app.post('/sessao/cadastro', async (req, res) => {
+  const { nome_praia, latitude, longitude, direcao_ideal_swell, direcao_ideal_vento } = req.body;
+  try {
+    const result = await pool.query('INSERT INTO praia(nome_praia, latitude, longitude, direcao_ideal_swell, direcao_ideal_vento) VALUES($1, $2, $3, $4, $5) RETURNING *', [nome_praia, latitude, longitude, direcao_ideal_swell, direcao_ideal_vento]);
+    res.json(result.rows[0]);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Não foi possível salvar a praia' });
+  }
+});
+
+app.put('/sessao/cadastro/:id', async (req, res) => {
+  const { id } = req.params;
+  const { nome, senha, picture, instagram, whatsapp, email, link } = req.body;
+  console.log('Rota fotografo - PUT');
+  try {
+    const result = await pool.query('UPDATE fotografo SET nome=$1, senha=$2, picture=$3, instagram=$4, whatsapp=$5, email=$6, link=$7 WHERE id=$8 RETURNING *', [nome, senha, picture, instagram, whatsapp, email, link, id]);
+    if (result.rowCount > 0) {
+      res.json(result.rows[0]);
+    } else {
+      res.status(404).json({ error: 'Praia não encontrado' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Não foi possível atualizar a Praia' });
+  }
+});
+
+app.delete('/sessao/cadastro/:id', async (req, res) => {
+  const { id } = req.params;
+  console.log('Rota Praia - DELETE');
+  try {
+    const result = await pool.query('DELETE FROM praia WHERE id=$1 RETURNING *', [id]);
+    if (result.rowCount > 0) {
+      res.json(result.rows[0]);
+    } else {
+      res.status(404).json({ error: 'Praia não encontrado' });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Não foi possível deletar a Praia' });
+  }
+});
+
+app.get('/sessao', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM praia');
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Erro ao buscar praia:', err);
+    res.status(500).json({ error: 'Não foi possível buscar as praias' });
+  }
+});
 
 // Iniciando o servidor
 
