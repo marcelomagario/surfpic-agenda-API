@@ -137,18 +137,34 @@ app.get('/praia', async (req, res) => {
 });
 
 
-// Sessão - TO DO
+// Sessão
 
 app.post('/sessao/cadastro', async (req, res) => {
-  const { nome_praia, latitude, longitude, direcao_ideal_swell, direcao_ideal_vento } = req.body;
+  const { fotografoid, praiaid, data, hora_inicial, hora_final } = req.body;
+
   try {
-    const result = await pool.query('INSERT INTO praia(nome_praia, latitude, longitude, direcao_ideal_swell, direcao_ideal_vento) VALUES($1, $2, $3, $4, $5) RETURNING *', [nome_praia, latitude, longitude, direcao_ideal_swell, direcao_ideal_vento]);
+    // Verificar se o fotógrafo existe
+    const fotografo = await pool.query('SELECT * FROM fotografo WHERE id=$1', [fotografoid]);
+    if (fotografo.rowCount === 0) {
+      return res.status(404).json({ error: 'Fotógrafo não encontrado' });
+    }
+
+    // Verificar se a praia existe
+    const praia = await pool.query('SELECT * FROM praia WHERE id=$1', [praiaid]);
+    if (praia.rowCount === 0) {
+      return res.status(404).json({ error: 'Praia não encontrada' });
+    }
+
+    // Inserir a nova sessão
+    const result = await pool.query('INSERT INTO sessao_fotografo(fotografoid, praiaid, data, hora_inicial, hora_final) VALUES($1, $2, $3, $4, $5) RETURNING *', [fotografoid, praiaid, data, hora_inicial, hora_final]);
     res.json(result.rows[0]);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Não foi possível salvar a praia' });
+    res.status(500).json({ error: 'Não foi possível salvar a sessão' });
   }
 });
+
+
 
 app.put('/sessao/cadastro/:id', async (req, res) => {
   const { id } = req.params;
@@ -190,6 +206,18 @@ app.get('/sessao', async (req, res) => {
   } catch (err) {
     console.error('Erro ao buscar praia:', err);
     res.status(500).json({ error: 'Não foi possível buscar as praias' });
+  }
+});
+
+// mostrar todas as sessões de um fotografo
+app.get('/sessao/fotografo/:fotografoid', async (req, res) => {
+  const { fotografoid } = req.params;
+  try {
+    const result = await pool.query('SELECT * FROM sessao WHERE fotografoid=$1', [fotografoid]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Não foi possível buscar as sessões' });
   }
 });
 
