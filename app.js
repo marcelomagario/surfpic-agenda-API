@@ -170,7 +170,7 @@ app.put('/sessao/cadastro/:id', async (req, res) => {
   const { id } = req.params;
   const { fotografoid, praiaid,data, hora_inicial, hora_final } = req.body;
   try {
-    const result = await pool.query('UPDATE fotografo SET fotografoid=$1, praiaid=$2, data=$3, hora_inicial=$4, hora_final=$5 WHERE id=$6 RETURNING *', [fotografoid, praiaid, data, hora_inicial, hora_final, id]);
+    const result = await pool.query('UPDATE sessao_fotografo SET fotografoid=$1, praiaid=$2, data=$3, hora_inicial=$4, hora_final=$5 WHERE id=$6 RETURNING *', [fotografoid, praiaid, data, hora_inicial, hora_final, id]);
     if (result.rowCount > 0) {
       res.json(result.rows[0]);
     } else {
@@ -184,27 +184,27 @@ app.put('/sessao/cadastro/:id', async (req, res) => {
 
 app.delete('/sessao/cadastro/:id', async (req, res) => {
   const { id } = req.params;
-  console.log('Rota Praia - DELETE');
   try {
-    const result = await pool.query('DELETE FROM praia WHERE id=$1 RETURNING *', [id]);
+    const result = await pool.query('DELETE FROM sessao_fotografo WHERE id=$1 RETURNING *', [id]);
     if (result.rowCount > 0) {
       res.json(result.rows[0]);
     } else {
-      res.status(404).json({ error: 'Praia não encontrado' });
+      res.status(404).json({ error: 'Sessão não encontrada' });
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Não foi possível deletar a Praia' });
+    res.status(500).json({ error: 'Não foi possível deletar a Sessão' });
   }
 });
 
+// mostrar todas as sessões
 app.get('/sessao', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM praia');
+    const result = await pool.query('SELECT * FROM sessao_fotografo');
     res.json(result.rows);
   } catch (err) {
-    console.error('Erro ao buscar praia:', err);
-    res.status(500).json({ error: 'Não foi possível buscar as praias' });
+    console.error('Erro ao buscar sessão:', err);
+    res.status(500).json({ error: 'Não foi possível buscar as sessões' });
   }
 });
 
