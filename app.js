@@ -168,18 +168,17 @@ app.post('/sessao/cadastro', async (req, res) => {
 
 app.put('/sessao/cadastro/:id', async (req, res) => {
   const { id } = req.params;
-  const { nome, senha, picture, instagram, whatsapp, email, link } = req.body;
-  console.log('Rota fotografo - PUT');
+  const { fotografoid, praiaid,data, hora_inicial, hora_final } = req.body;
   try {
-    const result = await pool.query('UPDATE fotografo SET nome=$1, senha=$2, picture=$3, instagram=$4, whatsapp=$5, email=$6, link=$7 WHERE id=$8 RETURNING *', [nome, senha, picture, instagram, whatsapp, email, link, id]);
+    const result = await pool.query('UPDATE fotografo SET fotografoid=$1, praiaid=$2, data=$3, hora_inicial=$4, hora_final=$5 WHERE id=$6 RETURNING *', [fotografoid, praiaid, data, hora_inicial, hora_final, id]);
     if (result.rowCount > 0) {
       res.json(result.rows[0]);
     } else {
-      res.status(404).json({ error: 'Praia não encontrado' });
+      res.status(404).json({ error: 'Sessão não encontrada' });
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: 'Não foi possível atualizar a Praia' });
+    res.status(500).json({ error: 'Não foi possível atualizar a Sessão' });
   }
 });
 
