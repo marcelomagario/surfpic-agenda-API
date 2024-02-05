@@ -200,7 +200,12 @@ app.delete('/sessao/cadastro/:id', async (req, res) => {
 // mostrar todas as sessões
 app.get('/sessao', async (req, res) => {
   try {
-    const result = await pool.query('SELECT * FROM sessao_fotografo');
+    const result = await pool.query(`
+      SELECT sf.*, f.nome, f.picture, f.instagram, f.whatsapp, f.email, f.link, p.* 
+      FROM sessao_fotografo sf
+      INNER JOIN fotografo f ON sf.fotografoid = f.id
+      INNER JOIN praia p ON sf.praiaid = p.id
+    `);
     res.json(result.rows);
   } catch (err) {
     console.error('Erro ao buscar sessão:', err);
@@ -212,7 +217,7 @@ app.get('/sessao', async (req, res) => {
 app.get('/sessao/fotografo/:fotografoid', async (req, res) => {
   const { fotografoid } = req.params;
   try {
-    const result = await pool.query('SELECT * FROM sessao WHERE fotografoid=$1', [fotografoid]);
+    const result = await pool.query('SELECT * FROM sessao_fotografo WHERE fotografoid=$1', [fotografoid]);
     res.json(result.rows);
   } catch (err) {
     console.error(err);
