@@ -6,8 +6,8 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
+const cors = require('cors');
+app.use(cors());
 
 const pool = new Pool({
   user: 'postgres',
@@ -17,13 +17,6 @@ const pool = new Pool({
   port: 5432,
 });
 
-
-
-// Fotografo
-
-// app.get('/fotografo/cadastro', (req, res) => {
-//   // res.render('cadastro');
-// });
 
 app.post('/fotografo/cadastro', async (req, res) => {
   const { nome, senha, picture, instagram, whatsapp, email, link } = req.body;
@@ -227,6 +220,6 @@ app.get('/sessao/fotografo/:fotografoid', async (req, res) => {
 
 // Iniciando o servidor
 
-app.listen(3000, () => {
-  console.log('Servidor rodando na porta 3000');
+app.listen(3001, () => {
+  console.log('Servidor rodando na porta 3001');
 });
