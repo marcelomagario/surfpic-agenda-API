@@ -194,7 +194,7 @@ app.delete('/sessao/cadastro/:id', async (req, res) => {
 app.get('/sessao', async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT sf.*, f.nome, f.picture, f.instagram, f.whatsapp, f.email, f.link, p.* 
+      SELECT sf.id AS sessao_id, sf.fotografoid, sf.praiaid, sf.data, sf.hora_inicial, sf.hora_final, f.nome, f.picture, f.instagram, f.whatsapp, f.email, f.link, p.*
       FROM sessao_fotografo sf
       INNER JOIN fotografo f ON sf.fotografoid = f.id
       INNER JOIN praia p ON sf.praiaid = p.id
