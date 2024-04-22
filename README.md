@@ -27,4 +27,19 @@ Start the server using node app.js.<br>
 Access the API at http://localhost:3001.<br>
 
 <br>
+
+## Running the Frontend:
+repo: https://github.com/marcelomagario/surfpic-agenda-react
+<br>
+To run the Surfpic Agenda frontend locally, follow these steps:
+<br><br>
+
+Clone the frontend repository to your local machine.<br>
+Navigate to the frontend project directory.<br>
+Install dependencies using npm install.<br>
+Build the frontend using npm run build.<br>
+Start the frontend server using npm run start.<br>
+Access the frontend at http://localhost:3000/.<br>
+<br>
+
 Join us in revolutionizing the way surfers and photographers connect and capture memorable moments at the beach! 
