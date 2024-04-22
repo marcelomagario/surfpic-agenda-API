@@ -16,5 +16,15 @@ NodeJS, <br>
 PostgreSQL, <br>
 RESTful API architecture,<br>
 <br>
+
+## Running the API:
+To run the Surfpic Agenda API locally, follow these steps:<br>
+<br>
+Clone the repository to your local machine.<br>
+Navigate to the project directory.<br>
+Install dependencies using npm install.<br>
+Start the server using node app.js.<br>
+Access the API at http://localhost:3001.<br>
+
 <br>
 Join us in revolutionizing the way surfers and photographers connect and capture memorable moments at the beach! 
