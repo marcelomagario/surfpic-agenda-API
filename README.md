@@ -31,6 +31,9 @@ Access the API at http://localhost:3001.<br>
 ## Running the Frontend:
 repo: https://github.com/marcelomagario/surfpic-agenda-react
 <br>
+![image](https://github.com/marcelomagario/surfpic-agenda-API/assets/104561536/1b1939f9-65a3-4c7d-903b-c8e86e40761d)
+
+<br>
 To run the Surfpic Agenda frontend locally, follow these steps:
 <br><br>
 
